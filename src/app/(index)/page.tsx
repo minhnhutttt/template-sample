@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { SITE_URL, OG } from '@/config/constants'
 
 // remove
-import Sample from './components/sample'
+import Kv from './components/kv'
 
 export const metadata: Metadata = {
   openGraph: {
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 const IndexPage = () => {
   return (
     <>
-      <Sample />
+      <Kv />
     </>
   )
 }

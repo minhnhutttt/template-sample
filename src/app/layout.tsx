@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
-import { Noto_Sans_JP } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import { ReactNode } from 'react'
 
-import Footer from '@/components/footer'
-import Header from '@/components/header'
 import {
   SITE_URL,
   SITE_NAME,
@@ -13,8 +11,7 @@ import {
 } from '@/config/constants'
 import './globals.scss'
 
-const noto = Noto_Sans_JP({
-  weight: ['300', '400', '500', '700', '900'],
+const inter = Inter({
   subsets: ['latin'],
 })
 
@@ -40,11 +37,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="ja">
-      <body className={noto.className}>
-        <Header />
-        {children}
-        <Footer />
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }
