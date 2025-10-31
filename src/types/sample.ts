@@ -1,0 +1,1 @@
+// Type definitions (API responses, props, etc.)

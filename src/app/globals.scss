@@ -1,0 +1,14 @@
+@use "tailwindcss";
+@source "./src/**/*.{js,ts,jsx,tsx,mdx}";
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+}
+
+@layer components {
+}
+
+@layer utilities {
+}
