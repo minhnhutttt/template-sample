@@ -21,16 +21,23 @@ const Header = () => {
   }, [NavOpen])
 
   return (
-    <header className="relative bg-gray-100">
-      <div className="container">
-        <div className="flex h-24 items-center justify-between">
-          <div className="max-w-[160px]">
-            <Link href="/">
-              <img src="/assets/images/logo.png" alt="" />
-            </Link>
+    <div className="h-[calc(100vh - 16px)] fixed bottom-[16px] z-50 flex w-[100dvw] items-end justify-center overflow-hidden">
+      <div className="relative flex flex-col [perspective:1000px]">
+        <div className="relative grid justify-items-start [perspective:1000px]"></div>
+        <div className="flex bg-black [backface-visibility:hidden]">
+          <div className="relative h-16 w-[326px] flex-[1] bg-black">
+            <div className="flex w-[70px] flex-[0_0_70px] items-center justify-center">
+              <button></button>
+            </div>
+            <div className="flex flex-[1] items-center justify-center"></div>
+            <div className="flex w-[70px] flex-[0_0_70px] items-center justify-center">
+              <button></button>
+            </div>
           </div>
+        </div>
+        <div className="flex h-24 items-center justify-between">
           <div
-            className={`max-lg:absolute max-lg:left-0 max-lg:top-0 max-lg:h-screen max-lg:w-full max-lg:overflow-y-scroll max-lg:bg-white max-lg:px-4 max-lg:pb-12 max-lg:pt-20 ${
+            className={`max-lg:absolute max-lg:top-0 max-lg:left-0 max-lg:h-screen max-lg:w-full max-lg:overflow-y-scroll max-lg:bg-white max-lg:px-4 max-lg:pt-20 max-lg:pb-12 ${
               NavOpen ? '' : 'max-lg:invisible max-lg:opacity-0'
             }`}
           >
@@ -69,7 +76,7 @@ const Header = () => {
           </button>
         </div>
       </div>
-    </header>
+    </div>
   )
 }
 
