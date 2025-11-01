@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Roboto, Creepster } from 'next/font/google'
 import { ReactNode } from 'react'
 
 import Header from '@/components/header'
@@ -12,8 +12,15 @@ import {
 } from '@/config/constants'
 import './globals.scss'
 
-const inter = Inter({
+const roboto = Roboto({
+  weight: ['400', '700'],
   subsets: ['latin'],
+})
+
+const creepster = Creepster({
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: '--font-creepster',
 })
 
 export const metadata: Metadata = {
@@ -38,7 +45,9 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="ja">
-      <body className={inter.className}>
+      <body
+        className={`bg-stone-900 ${roboto.className} ${creepster.variable}`}
+      >
         <Header />
         {children}
       </body>

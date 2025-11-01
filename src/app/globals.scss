@@ -1,5 +1,9 @@
-@use "tailwindcss";
+@use 'tailwindcss';
 @source "./src/**/*.{js,ts,jsx,tsx,mdx}";
+
+@theme {
+  --font-creepster: 'Creepster', 'cursive';
+}
 
 @layer base {
   * {
