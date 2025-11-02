@@ -162,7 +162,7 @@ const Senses = () => {
         </div>
       </div>
 
-      <p className="mt-8 px-4 px-5 text-center text-[clamp(16px,14.206px+100vw*.0046,22px)] leading-snug font-bold text-[#ffe000] uppercase">
+      <p className="my-8 px-4 px-5 text-center text-[clamp(16px,14.206px+100vw*.0046,22px)] leading-snug font-bold text-[#ffe000] uppercase">
         Phive has clubs located in Coimbra, Leiria, Lisbon, and Porto. <br />
         Get to know each one!
       </p>
