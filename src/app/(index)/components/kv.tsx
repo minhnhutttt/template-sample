@@ -63,7 +63,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
           {
             top: 0,
             transformOrigin: '50% 0%',
-            duration: 2,
+            duration: 1,
             ease: 'power3.inOut',
           },
           '+=1'
@@ -73,7 +73,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
           {
             bottom: 0,
             transformOrigin: '50% 100%',
-            duration: 2,
+            duration: 1,
             ease: 'power3.inOut',
           },
           '<'
@@ -83,13 +83,13 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
           {
             clipPath: 'polygon(0 50%,100% 50%,100% 50%,0 50%)',
             willChange: 'clip-path',
-            duration: 2,
+            duration: 1,
             ease: 'power3.inOut',
           },
           {
             clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
             willChange: 'clip-path',
-            duration: 2,
+            duration: 1,
             ease: 'power3.inOut',
           },
           '<'
