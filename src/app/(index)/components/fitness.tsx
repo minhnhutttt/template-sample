@@ -9,41 +9,73 @@ gsap.registerPlugin(ScrollTrigger)
 export default function FitnessScaleY() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
+  const weightRef = useRef<HTMLDivElement>(null)
+  const weight2Ref = useRef<HTMLDivElement>(null)
+  const weight3Ref = useRef<HTMLDivElement>(null)
+
   const svgContainerRef = useRef<HTMLDivElement>(null)
   const svgWrapRef = useRef<HTMLDivElement>(null)
-  const svgRef = useRef<HTMLDivElement>(null)
+  const svgBoxRef = useRef<HTMLDivElement>(null)
+  const blackTextRef = useRef<SVGTextElement>(null)
+
+  // --- SP (mobile) refs cho phần TODO: Scale SP ---
+  const spWrapperRef = useRef<HTMLDivElement>(null) // khối md:hidden h-screen
+  const spSlot1Ref = useRef<HTMLDivElement>(null) // h-[35vh] (container)
+  const spSlot2Ref = useRef<HTMLDivElement>(null) // h-[35vh] (container)
+  const spText1Ref = useRef<HTMLDivElement>(null) // text "Fitness"
+  const spText2Ref = useRef<HTMLDivElement>(null) // text "STRONG"
 
   useLayoutEffect(() => {
     const section = sectionRef.current
     const el = textRef.current
-    const svgWrapEl = svgWrapRef.current
     const svgContainerEl = svgContainerRef.current
-    const svgEl = svgRef.current
-    if (!section || !el || !svgWrapEl || !svgContainerEl || !svgEl) return
+    const svgWrapEl = svgWrapRef.current
+    const svgBoxEl = svgBoxRef.current
+    const blackText = blackTextRef.current
+    const weightEl = weightRef.current
+    const weight2El = weight2Ref.current
+    const weight3El = weight3Ref.current
+
+    if (
+      !section ||
+      !el ||
+      !svgContainerEl ||
+      !svgWrapEl ||
+      !svgBoxEl ||
+      !blackText ||
+      !weightEl ||
+      !weight2El ||
+      !weight3El
+    )
+      return
 
     const MAX_SCALE = 10
 
-    // Đo chiều cao thực bất kể transform hiện tại
-    const getBaseHeight = () => {
-      const currentScale = Number(gsap.getProperty(el, 'scaleY')) || 1
-      // Ưu tiên clientHeight (không bị transform); nếu vì lý do nào đó =0, fallback sang rect/scale
-      const hClient = el.clientHeight
+    // ---------- Helpers (không phụ thuộc breakpoint) ----------
+    // Đo chiều cao "thật" của node bất kể transform hiện tại
+    const getBaseHeight = (node: HTMLElement) => {
+      // 1) clientHeight KHÔNG bị ảnh hưởng bởi transform → dùng trực tiếp
+      const hClient = node.clientHeight
       if (hClient > 0) return hClient
-      const rect = el.getBoundingClientRect()
+
+      // 2) Fallback: nếu vì lý do nào đó clientHeight = 0, lúc này getBoundingClientRect()
+      // mới bị ảnh hưởng bởi scale, nên cần chia scale
+      const currentScale = Number(gsap.getProperty(node, 'scaleY')) || 1
+      const rect = node.getBoundingClientRect()
       return (rect.height || 1) / currentScale
     }
 
-    // Tính scale đích để full chiều cao viewport
     const getTargetScale = () => {
-      const baseH = getBaseHeight()
+      const baseH = getBaseHeight(el)
       const vh = section.getBoundingClientRect().height
       return Math.min(vh / baseH, MAX_SCALE)
     }
 
+    // SVG box có tỉ lệ 16:4
     const getSvgBaseHeight = () => {
-      // Lấy bề rộng thực, rồi suy ra chiều cao từ aspect ratio 16/4
-      const w = svgEl.clientWidth || svgEl.getBoundingClientRect().width || 1
-      const ratio = 4 / 16 // khớp với aspect-[16/4]
+      const w =
+        svgBoxEl.clientWidth || svgBoxEl.getBoundingClientRect().width || 1
+      const ratio = 4 / 16
       return Math.max(1, w * ratio)
     }
 
@@ -53,11 +85,16 @@ export default function FitnessScaleY() {
       return Math.min(vh / baseH, MAX_SCALE)
     }
 
-    console.log(getSvgScale())
+    const fitSvgHeight = () => {
+      gsap.set(svgBoxEl, {
+        scaleY: getSvgScale(),
+        transformOrigin: 'center center',
+        willChange: 'transform',
+      })
+    }
 
     const ctx = gsap.context(() => {
-      // Chuẩn bị
-
+      // ---------- Timeline luôn chạy (mobile + desktop) ----------
       gsap.set(el, {
         scaleY: 0.001,
         transformOrigin: 'top center',
@@ -76,50 +113,148 @@ export default function FitnessScaleY() {
         },
       })
 
-      tl.to(el, {
-        scaleY: () => getTargetScale(),
-        duration: 0.5,
+      tl.to(el, { scaleY: () => getTargetScale(), duration: 0.5 })
+      tl.to(
+        weightEl,
+        { rotate: 360, yPercent: 100, duration: 0.5, ease: 'power1.inOut' },
+        '<'
+      )
+      tl.to(el, { scaleY: 0.001, duration: 0.5 })
+      tl.to(
+        weightEl,
+        { rotate: -360, yPercent: -100, duration: 0.5, ease: 'power1.inOut' },
+        '<'
+      )
+
+      // ---------- svgTL: chỉ tạo khi >= 768px ----------
+      const mm = gsap.matchMedia()
+
+      mm.add('(min-width: 768px)', () => {
+        fitSvgHeight()
+        gsap.set(blackText, { opacity: 1 })
+
+        const svgTl = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: svgContainerEl,
+            start: 'top top',
+            end: '+=300%',
+            scrub: true,
+            pin: true,
+            markers: false,
+            invalidateOnRefresh: true,
+            onRefresh: fitSvgHeight,
+          },
+        })
+
+        svgTl
+          .to(
+            svgWrapEl,
+            { scale: 30, transformOrigin: 'center center', duration: 1 },
+            0
+          )
+          .to(svgWrapEl, { opacity: 0, duration: 0.4 })
+          .to(
+            weight2El,
+            {
+              yPercent: -window.innerHeight,
+              rotate: 360,
+              transformOrigin: 'center center',
+              duration: 2,
+              ease: 'power1.inOut',
+            },
+            '<'
+          )
+          .to(weight3El, {
+            yPercent: -window.innerHeight,
+            rotate: -360,
+            transformOrigin: 'center center',
+            duration: 2,
+            ease: 'power1.inOut',
+          })
+
+        svgTl.to(blackText, { opacity: 0, duration: 1 }, 0)
+
+        const onResize = () => {
+          fitSvgHeight()
+          ScrollTrigger.refresh()
+        }
+        window.addEventListener('resize', onResize, { passive: true })
+
+        return () => {
+          window.removeEventListener('resize', onResize)
+          svgTl.kill()
+        }
       })
 
-      tl.to(el, {
-        scaleY: 0.001,
-        duration: 0.5,
+      // ---------- TODO: Scale SP (mobile < 768px) ----------
+      mm.add('(max-width: 767.98px)', () => {
+        const slot1 = spSlot1Ref.current
+        const slot2 = spSlot2Ref.current
+        const t1 = spText1Ref.current
+        const t2 = spText2Ref.current
+
+        if (!slot1 || !slot2 || !t1 || !t2) return
+
+        // đảm bảo origin đúng
+        gsap.set([t1, t2], { transformOrigin: 'top center' })
+
+        const fitOne = (slotEl: HTMLElement, textEl: HTMLElement) => {
+          // tạm set scaleY=1 để đo chính xác base height khi font clamp thay đổi
+          gsap.set(textEl, { scaleY: 1 })
+          const baseH = getBaseHeight(textEl)
+          const targetH = slotEl.getBoundingClientRect().height || 1
+          const scaleY = Math.min(targetH / baseH, MAX_SCALE)
+          gsap.set(textEl, { scaleY })
+        }
+
+        const fitAll = () => {
+          fitOne(slot1, t1)
+          fitOne(slot2, t2)
+        }
+
+        // lần đầu
+        fitAll()
+
+        // Resize & orientation
+        const onResize = () => fitAll()
+        window.addEventListener('resize', onResize, { passive: true })
+        window.addEventListener('orientationchange', onResize)
+
+        // Quan sát kích thước slot thay đổi (do browser UI, safe-area, v.v.)
+        const ro1 = new ResizeObserver(() => fitOne(slot1, t1))
+        const ro2 = new ResizeObserver(() => fitOne(slot2, t2))
+        ro1.observe(slot1)
+        ro2.observe(slot2)
+
+        // Cleanup khi rời mobile hoặc unmount
+        return () => {
+          window.removeEventListener('resize', onResize)
+          window.removeEventListener('orientationchange', onResize)
+          ro1.disconnect()
+          ro2.disconnect()
+          // reset về 1 để không dính sang desktop
+          gsap.set([t1, t2], { scaleY: 1 })
+        }
       })
 
-      gsap.set(svgEl, {
-        scaleY: getSvgScale(),
-        transformOrigin: 'center center',
-        willChange: 'transform',
-      })
-
-      const svgTl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: svgContainerEl,
-          start: 'top top',
-          end: '+=100%',
-          scrub: true,
-          pin: true,
-          markers: true,
-          invalidateOnRefresh: true,
-        },
-      })
-
-      svgTl.to(svgWrapEl, {
-        scale: 3,
-        duration: 0.5,
-      })
+      // Cleanup tổng cho matchMedia khi unmount
+      return () => {
+        mm.revert()
+      }
     })
 
-    return () => ctx.revert()
+    return () => {
+      ctx.revert()
+    }
   }, [])
 
   return (
     <section className="relative bg-[#ffe000]">
-      <div className="flex min-h-[200svh] justify-center">
+      <div className="flex min-h-[100svh] justify-center md:min-h-[200svh]">
         <div
           ref={sectionRef}
-          className="sticky top-0 right-0 left-0 h-[50vh] md:h-screen"
+          className="sticky top-0 right-0 left-0 flex h-[50vh] items-start max-md:hidden md:h-screen"
         >
           <div
             ref={textRef}
@@ -127,47 +262,136 @@ export default function FitnessScaleY() {
           >
             Fitness
           </div>
+          <div ref={weightRef} className="absolute size-45">
+            <img
+              className="max-md:hidden"
+              src="/assets/images/weight.webp"
+              alt=""
+            />
+          </div>
+        </div>
+
+        {/* TODO: Scale SP */}
+        <div ref={spWrapperRef} className="flex h-screen flex-col md:hidden">
+          <div className="h-[70vh]">
+            <div
+              ref={spSlot1Ref}
+              className="flex h-[35vh] origin-top items-start"
+            >
+              <div
+                ref={spText1Ref}
+                className="text-[clamp(90px,2.828px+100vw*.2448,470px)] leading-[0.8em] text-black uppercase select-none"
+              >
+                Fitness
+              </div>
+            </div>
+            <div
+              ref={spSlot2Ref}
+              className="flex h-[35vh] origin-top items-start"
+            >
+              <div
+                ref={spText2Ref}
+                className="text-[clamp(90px,2.828px+100vw*.2448,470px)] leading-[0.8em] font-bold text-black uppercase select-none"
+              >
+                STRONG
+              </div>
+            </div>
+          </div>
+          <div className="flex-1">
+            <video
+              src="/assets/video/web.mp4"
+              className="h-full w-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          </div>
         </div>
       </div>
-      <div ref={svgContainerRef} className="-mt-[100svh] h-[50vh] md:h-screen">
-        <div ref={svgWrapRef} className="flex h-full w-full justify-center">
-          <div
-            ref={svgRef}
-            className="aspect-[16/4] w-full max-w-[1600px] origin-top"
-          >
+
+      <div
+        ref={svgContainerRef}
+        className="relative -mt-[50svh] h-[50vh] overflow-hidden md:-mt-[100svh] md:h-screen"
+      >
+        <div className="absolute inset-0 -z-10">
+          <video
+            src="/assets/video/web.mp4"
+            className="h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+        </div>
+
+        {/* SVG wrap */}
+        <div
+          ref={svgWrapRef}
+          className="flex h-full w-full items-center justify-center max-md:hidden"
+        >
+          <div ref={svgBoxRef} className="aspect-[16/4] w-full origin-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 1600 400"
               className="h-full w-full"
-              aria-label="Strong video mask"
+              aria-label="Yellow outside, video through text"
             >
-              <mask id="strong-mask">
-                <rect x="0" y="0" fill="black" />
-                <text
-                  x="50%"
-                  y="50%"
-                  dominantBaseline="middle"
-                  textAnchor="middle"
-                  fill="white"
-                  className="bg-black text-[380px] leading-[0.1em] font-bold"
-                >
-                  STRONG
-                </text>
-              </mask>
+              <defs>
+                <mask id="hole-mask" maskUnits="userSpaceOnUse">
+                  <rect x="0" y="0" width="1600" height="400" fill="#fff" />
+                  <text
+                    x="50%"
+                    y="50%"
+                    dominantBaseline="middle"
+                    textAnchor="middle"
+                    fontSize="350"
+                    fontWeight="700"
+                    fill="#000"
+                  >
+                    STRONG
+                  </text>
+                </mask>
+              </defs>
 
-              <g mask="url(#strong-mask)">
-                <foreignObject x="0" y="0" className="h-full w-full">
-                  <video
-                    src="/assets/video/web.mp4"
-                    className="h-full w-full object-cover"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                  />
-                </foreignObject>
-              </g>
+              <rect
+                x="0"
+                y="0"
+                width="1600"
+                height="400"
+                fill="#ffe000"
+                mask="url(#hole-mask)"
+              />
+
+              <text
+                ref={blackTextRef}
+                x="50%"
+                y="50%"
+                dominantBaseline="middle"
+                textAnchor="middle"
+                fontSize="350"
+                fontWeight="700"
+                fill="#000"
+              >
+                STRONG
+              </text>
             </svg>
           </div>
+        </div>
+
+        <div ref={weight2Ref} className="absolute top-full left-1/6 size-45">
+          <img
+            className="max-md:hidden"
+            src="/assets/images/weight.webp"
+            alt=""
+          />
+        </div>
+        <div ref={weight3Ref} className="absolute top-full right-1/6 size-45">
+          <img
+            className="max-md:hidden"
+            src="/assets/images/weight.webp"
+            alt=""
+          />
         </div>
       </div>
     </section>
