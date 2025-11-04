@@ -101,7 +101,6 @@ export default function Club() {
           end: END,
           pin: true,
           scrub: 1,
-          anticipatePin: 1,
           invalidateOnRefresh: true,
         },
         defaults: { ease: EASE, duration: DUR, stagger: STAG },
@@ -208,7 +207,7 @@ export default function Club() {
         '>-0.2'
       )
     }, wrapper)
-
+    ScrollTrigger.refresh()
     return () => {
       ctx.revert()
       splits.forEach((s) => s.revert())

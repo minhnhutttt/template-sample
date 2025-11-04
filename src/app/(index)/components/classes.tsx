@@ -6,105 +6,73 @@ import { useLayoutEffect, useRef } from 'react'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
-const EASE = 'power3.out'
-const DUR = 0.6
-const STAG = { each: 0.06, from: 'start' as const }
-
-const dataImage = [
-  '/assets/images/1.jpg',
-  '/assets/images/2.jpg',
-  '',
-  '/assets/images/3.jpg',
-  '/assets/images/4.jpg',
-  '',
-  '/assets/images/5.jpg',
-  '',
-  '/assets/images/6.jpg',
-  '',
-  '/assets/images/7.jpg',
-  '',
-  '',
-  '/assets/images/8.jpg',
-  '',
-  '',
-  '',
-  '',
-  '/assets/images/9.jpg',
-  '',
-  '',
-  '/assets/images/10.jpg',
-  '',
-  '',
-  '',
-  '/assets/images/11.jpg',
-  '/assets/images/12.jpg',
-  '',
-  '',
-  '',
-  '',
-  '/assets/images/13.jpg',
-  '',
-  '',
-  '/assets/images/14.jpg',
-  '',
-  '/assets/images/15.jpg',
-  '',
-  '/assets/images/16.jpg',
-]
-
 export default function Classes() {
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  const textTopRef = useRef<HTMLSpanElement>(null)
-  const textMiddleRef = useRef<HTMLSpanElement>(null)
-  const textBottomRef = useRef<HTMLSpanElement>(null)
-  const textRef = useRef<HTMLParagraphElement>(null)
-  const buttonRef = useRef<HTMLDivElement>(null)
-
-  const gridRef = useRef<HTMLDivElement>(null)
+  const classWrapperRef = useRef<HTMLDivElement>(null)
+  const classTextTopRef = useRef<HTMLSpanElement>(null)
+  const classTextMiddleRef = useRef<HTMLSpanElement>(null)
+  const classTextBottomRef = useRef<HTMLSpanElement>(null)
+  const img01Ref = useRef<HTMLSpanElement>(null)
+  const img02Ref = useRef<HTMLSpanElement>(null)
+  const img03Ref = useRef<HTMLSpanElement>(null)
+  const img04Ref = useRef<HTMLSpanElement>(null)
 
   useLayoutEffect(() => {
-    const wrapper = wrapperRef.current
-    const topEl = textTopRef.current
-    const middleEl = textMiddleRef.current
-    const bottomEl = textBottomRef.current
-    const textEl = textRef.current
-    const buttonEl = buttonRef.current
-    const gridEl = gridRef.current
-
+    const wrapper = classWrapperRef.current
+    const topEl = classTextTopRef.current
+    const middleEl = classTextMiddleRef.current
+    const bottomEl = classTextBottomRef.current
+    const img01El = img01Ref.current
+    const img02El = img02Ref.current
+    const img03El = img03Ref.current
+    const img04El = img04Ref.current
     if (
       !wrapper ||
       !topEl ||
       !middleEl ||
       !bottomEl ||
-      !textEl ||
-      !gridEl ||
-      !buttonEl
+      !img01El ||
+      !img02El ||
+      !img03El ||
+      !img04El
     )
       return
 
-    const splits: SplitText[] = []
+    const imgs = [img01El, img02El, img03El, img04El]
 
+    gsap.set(imgs, { yPercent: 100, force3D: true, willChange: 'transform' })
+
+    const getExitYPercent = (el: HTMLElement) => {
+      const H = wrapper.clientHeight || window.innerHeight
+      const h = el.clientHeight || el.getBoundingClientRect().height || 1
+      const epsilon = 2
+      return -(1 + H / h) * 100 - epsilon
+    }
+
+    const splits: SplitText[] = []
     const ctx = gsap.context(() => {
       const splitTop = new SplitText(topEl, { type: 'chars' })
       const splitMiddle = new SplitText(middleEl, { type: 'chars' })
       const splitBottom = new SplitText(bottomEl, { type: 'chars' })
-      const splitText = new SplitText(textEl, { type: 'chars' })
-      splits.push(splitTop, splitMiddle, splitBottom, splitText)
-      gsap.set(splitText.chars, { autoAlpha: 0, scale: 1.5 })
-
-      const END = '+=200%'
+      splits.push(splitTop, splitMiddle, splitBottom)
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapper,
           start: 'top top',
-          end: END,
+          end: '+=400%',
           pin: true,
-          scrub: 1,
+          scrub: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onRefresh: () => {
+            imgs.forEach((el) =>
+              gsap.set(el, {
+                yPercent: gsap.getProperty(el, 'yPercent') as number,
+              })
+            )
+          },
         },
-        defaults: { ease: EASE, duration: DUR, stagger: STAG },
+        defaults: { ease: 'none', stagger: { each: 0.06, from: 'start' } },
       })
 
       const scaleChars = (
@@ -122,93 +90,34 @@ export default function Classes() {
         )
 
       scaleChars(splitTop.chars, 1, 0, '50% 0%')
-      scaleChars(splitMiddle.chars, 0, 1, '50% 100%', '<')
-      scaleChars(splitMiddle.chars, 1, 0, '50% 0%')
-      tl.fromTo(
-        splitBottom.chars,
-        { scaleY: 0, transformOrigin: '50% 100%' },
-        {
-          scaleY: 1,
-          transformOrigin: '50% 100%',
-          onStart: () => {
-            gsap.to(splitText.chars, {
-              autoAlpha: 1,
-              scale: 1,
-              ease: EASE,
-              duration: DUR,
-            })
-            gsap.to(buttonEl, {
-              opacity: 1,
-              scale: 1,
-              ease: EASE,
-              duration: DUR,
-            })
-          },
-        },
+      tl.to(
+        img01El,
+        { yPercent: () => getExitYPercent(img01El), force3D: true },
         '<'
       )
 
-      const items = Array.from(
-        gridEl.querySelectorAll<HTMLImageElement>('[data-grid-item]')
+      scaleChars(splitMiddle.chars, 0, 1, '50% 100%', '<')
+      tl.to(
+        img02El,
+        { yPercent: () => getExitYPercent(img02El), force3D: true },
+        '<+=0.5'
       )
 
-      items.forEach((el) => {
-        if (!el.dataset.rot)
-          el.dataset.rot = String(gsap.utils.random(-8, 8, 0.1))
-        if (!el.dataset.scl)
-          el.dataset.scl = String(gsap.utils.random(0.92, 2, 0.01))
-        el.style.willChange = 'transform'
-        el.style.transformOrigin = '50% 50%'
-      })
+      scaleChars(splitMiddle.chars, 1, 0, '50% 0%')
+      tl.to(
+        img03El,
+        { yPercent: () => getExitYPercent(img03El), force3D: true },
+        '<+=0.5'
+      )
 
-      const imgTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: wrapper,
-          start: 'top top',
-          end: END,
-          scrub: 1,
-          markers: false,
-          invalidateOnRefresh: true,
-        },
-      })
-
-      const getCenter = () => {
-        const vw = window.innerWidth
-        const vh = window.innerHeight
-        return { cx: vw / 2, cy: vh / 2 }
-      }
-
-      imgTl.to(items, {
-        x: (_i, el: HTMLElement) => {
-          const rect = el.getBoundingClientRect()
-          const { cx } = getCenter()
-          const ex = rect.left + rect.width / 2
-          return cx - ex
-        },
-        y: (_i, el: HTMLElement) => {
-          const rect = el.getBoundingClientRect()
-          const { cy } = getCenter()
-          const ey = rect.top + rect.height / 2
-          return cy - ey
-        },
-        rotate: (_i, el: HTMLElement) => Number(el.dataset.rot || 0),
-        scale: (_i, el: HTMLElement) => Number(el.dataset.scl || 2),
-        ease: 'power3.out',
-        duration: 1.2,
-        stagger: { amount: 2, from: 'start' },
-      })
-
-      imgTl.to(
-        items,
-        {
-          scale: (_i, el: HTMLElement) =>
-            Number(el.dataset.rot || 0) > 0 ? 2 : 2,
-          duration: 0.6,
-        },
-        '>-0.2'
+      scaleChars(splitBottom.chars, 0, 1, '50% 100%', '<')
+      tl.to(
+        img04El,
+        { yPercent: () => getExitYPercent(img04El), force3D: true },
+        '<+=0.5'
       )
     }, wrapper)
-
+    ScrollTrigger.refresh()
     return () => {
       ctx.revert()
       splits.forEach((s) => s.revert())
@@ -217,63 +126,83 @@ export default function Classes() {
 
   return (
     <div
-      ref={wrapperRef}
-      className="relative flex min-h-screen items-center justify-center"
+      ref={classWrapperRef}
+      className="relative flex h-screen items-center justify-center overflow-hidden"
     >
-      <div
-        ref={gridRef}
-        className="pointer-events-none absolute inset-0 mx-auto grid grid-cols-[repeat(4,_1fr)] grid-rows-[repeat(6,_1fr)] gap-[min(16px,16px+100vw*0)] px-4 py-10 md:grid-cols-[repeat(10,_1fr)] md:grid-rows-[repeat(4,_1fr)]"
-      >
-        {dataImage.map((src, i) => (
-          <div key={i} className="relative w-full">
-            {src !== '' && (
-              <img
-                data-grid-item
-                src={src}
-                alt=""
-                className="h-full w-full object-cover [transform-style:preserve-3d]"
-                loading="lazy"
-                decoding="async"
-              />
-            )}
-          </div>
-        ))}
+      <div className="relative text-center text-[clamp(80px,calc(30px+15.25vw),300px)] leading-none font-bold whitespace-nowrap text-[#ffe000] will-change-transform">
+        <span ref={classTextTopRef} className="inline-block">
+          CLASSES
+        </span>
+        <span
+          ref={classTextMiddleRef}
+          className="absolute inset-0 inline-block"
+        >
+          CLASSES
+        </span>
+        <span
+          ref={classTextBottomRef}
+          className="absolute inset-0 inline-block"
+        >
+          CLASSES
+        </span>
+        <p className="mx-auto w-full max-w-[600px] px-5 text-center text-[clamp(16px,14.206px+100vw*.0046,22px)] whitespace-normal text-[#ffe000] uppercase">
+          The most exciting classes, created by top instructors. No matter your
+          goal, we can make it happen.
+        </p>
       </div>
 
-      <div className="relative z-10 text-[clamp(80px,calc(50px+17.25vw),300px)] leading-none font-bold whitespace-nowrap text-[#ffe000] will-change-transform">
-        <span ref={textTopRef} className="inline-block">
-          PHIVE
+      <span
+        ref={img01Ref}
+        className="group absolute top-full left-0 w-[45vw] max-w-[400px] origin-bottom border-[4px] border-transparent duration-300 will-change-transform hover:border-[#ffe000] md:w-[25vw]"
+      >
+        <img
+          src="/assets/images/classes-img-01.jpg"
+          alt=""
+          className="block h-auto w-full"
+        />
+        <span className="absolute inset-x-0 bottom-0 p-5 text-[clamp(20px,12px+100vw*.0076,30px)] text-white uppercase duration-300 group-hover:text-[#ffe000]">
+          Dance Kids
         </span>
-        <span ref={textMiddleRef} className="absolute inset-0 inline-block">
-          PHIVE
+      </span>
+      <span
+        ref={img02Ref}
+        className="group absolute top-full right-0 w-[45vw] max-w-[400px] origin-bottom border-[4px] border-transparent duration-300 will-change-transform hover:border-[#ffe000] md:w-[25vw]"
+      >
+        <img
+          src="/assets/images/classes-img-02.jpg"
+          alt=""
+          className="block h-auto w-full"
+        />
+        <span className="absolute inset-x-0 bottom-0 p-5 text-[clamp(20px,12px+100vw*.0076,30px)] text-white uppercase duration-300 group-hover:text-[#ffe000]">
+          Dance Kids
         </span>
-        <span ref={textBottomRef} className="absolute inset-0 inline-block">
-          PHIVE
+      </span>
+      <span
+        ref={img03Ref}
+        className="group absolute top-full left-0 w-[45vw] max-w-[400px] origin-bottom border-[4px] border-transparent duration-300 will-change-transform hover:border-[#ffe000] md:w-[25vw]"
+      >
+        <img
+          src="/assets/images/classes-img-03.jpg"
+          alt=""
+          className="block h-auto w-full"
+        />
+        <span className="absolute inset-x-0 bottom-0 p-5 text-[clamp(20px,12px+100vw*.0076,30px)] text-white uppercase duration-300 group-hover:text-[#ffe000]">
+          Dance Kids
         </span>
-        <p
-          ref={textRef}
-          className="font-creepster absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[clamp(12px,12px+100vw*.1,100px)] whitespace-nowrap text-white"
-        >
-          <span className="inline-block -rotate-5">Choose your club</span>
-        </p>
-        <div
-          ref={buttonRef}
-          className="relative z-10 flex justify-center gap-5 opacity-0 max-md:mt-10"
-        >
-          <a
-            href="#"
-            className="relative inline-flex h-[42px] items-center justify-center rounded-full bg-[#ffe000] px-[max(20.4px,20.4px+100vw*.0021)] text-[clamp(10px,9.415px+100vw*.0015,12px)] leading-[1.1em] tracking-[.06em] text-black duration-300 hover:tracking-normal hover:opacity-80"
-          >
-            View all Clubs
-          </a>
-          <a
-            href="#"
-            className="relative inline-flex h-[42px] items-center justify-center rounded-full border border-[#ffe000] px-[max(20.4px,20.4px+100vw*.0021)] text-[clamp(10px,9.415px+100vw*.0015,12px)] leading-[1.1em] tracking-[.06em] text-[#ffe000] duration-300 hover:bg-[#ffe000] hover:tracking-normal hover:text-black hover:opacity-80"
-          >
-            Schedule a visit
-          </a>
-        </div>
-      </div>
+      </span>
+      <span
+        ref={img04Ref}
+        className="group absolute top-full right-1/5 w-[45vw] max-w-[400px] origin-bottom border-[4px] border-transparent duration-300 will-change-transform hover:border-[#ffe000] md:w-[25vw]"
+      >
+        <img
+          src="/assets/images/classes-img-04.jpg"
+          alt=""
+          className="block h-auto w-full"
+        />
+        <span className="absolute inset-x-0 bottom-0 p-5 text-[clamp(20px,12px+100vw*.0076,30px)] text-white uppercase duration-300 group-hover:text-[#ffe000]">
+          Dance Kids
+        </span>
+      </span>
     </div>
   )
 }

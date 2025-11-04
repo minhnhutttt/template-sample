@@ -4,7 +4,9 @@ import { SITE_URL, OG } from '@/config/constants'
 
 import Classes from './components/classes'
 import Club from './components/club'
+import Download from './components/download'
 import Fitness from './components/fitness'
+import Join from './components/join'
 import Kv from './components/kv'
 import Senses from './components/senses'
 
@@ -26,6 +28,8 @@ const IndexPage = () => {
       <Club />
       <Fitness />
       <Classes />
+      <Download />
+      <Join />
     </>
   )
 }

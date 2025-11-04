@@ -141,7 +141,7 @@ export default function Fitness() {
         svgTl
           .to(
             svgWrapEl,
-            { scale: 30, transformOrigin: 'center center', duration: 1 },
+            { scale: 20, transformOrigin: 'center center', duration: 1 },
             0
           )
           .to(svgWrapEl, { opacity: 0, duration: 0.4 })
@@ -220,7 +220,6 @@ export default function Fitness() {
           gsap.set([t1, t2], { scaleY: 1 })
         }
       })
-
       return () => {
         mm.revert()
       }
@@ -232,7 +231,7 @@ export default function Fitness() {
   }, [])
 
   return (
-    <section className="relative bg-[#ffe000]">
+    <section className="relative overflow-hidden bg-[#ffe000] md:h-[500svh]">
       <div className="flex min-h-[100svh] justify-center md:min-h-[200svh]">
         <div
           ref={sectionRef}
