@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Roboto, Creepster } from 'next/font/google'
 import { ReactNode } from 'react'
 
+import Footer from '@/components/footer'
 import Header from '@/components/header'
 import {
   SITE_URL,
@@ -50,6 +51,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
       >
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   )

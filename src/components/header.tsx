@@ -22,7 +22,7 @@ const Header = () => {
   }, [NavOpen])
 
   return (
-    <div className="h-[calc(100vh - 16px)] fixed bottom-[16px] z-50 flex w-[100dvw] items-end justify-center overflow-hidden">
+    <div className="h-[calc(100vh - 16px)] fixed inset-x-0 bottom-[16px] z-50 mx-auto flex w-[326px] items-end justify-center overflow-hidden">
       <div className="relative grid justify-items-start [perspective:1000px]">
         <div
           className={`relative col-[1] row-[1] w-full origin-bottom bg-black text-center text-[#ffe000] uppercase transition-all duration-500 ${NavOpen ? '' : 'invisible h-0 scale-y-0'}`}

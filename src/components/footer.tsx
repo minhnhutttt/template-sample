@@ -2,10 +2,22 @@
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-300">
-      <div className="container pb-6 pt-24">
-        <div className="mb-4 grid grid-cols-4 gap-6"></div>
-        <div className="">&copy; 2023 company.</div>
+    <footer className="bg-[#ffe000] px-5">
+      <div className="flex items-center justify-between border-t-2 border-black p-4">
+        <div className="flex items-center gap-5">
+          <a
+            href="#"
+            className="text-[clamp(10px,8.206px+100vw*.0046,16px)] font-bold uppercase"
+          >
+            Privacy Policy
+          </a>
+          <a
+            href="#"
+            className="text-[clamp(10px,8.206px+100vw*.0046,16px)] font-bold uppercase"
+          >
+            Complaints Book
+          </a>
+        </div>
       </div>
     </footer>
   )
