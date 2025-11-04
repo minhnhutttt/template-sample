@@ -6,7 +6,7 @@ import { useLayoutEffect, useRef } from 'react'
 
 gsap.registerPlugin(ScrollTrigger)
 
-export default function FitnessScaleY() {
+export default function Fitness() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
   const weightRef = useRef<HTMLDivElement>(null)
@@ -18,12 +18,11 @@ export default function FitnessScaleY() {
   const svgBoxRef = useRef<HTMLDivElement>(null)
   const blackTextRef = useRef<SVGTextElement>(null)
 
-  // --- SP (mobile) refs cho phần TODO: Scale SP ---
-  const spWrapperRef = useRef<HTMLDivElement>(null) // khối md:hidden h-screen
-  const spSlot1Ref = useRef<HTMLDivElement>(null) // h-[35vh] (container)
-  const spSlot2Ref = useRef<HTMLDivElement>(null) // h-[35vh] (container)
-  const spText1Ref = useRef<HTMLDivElement>(null) // text "Fitness"
-  const spText2Ref = useRef<HTMLDivElement>(null) // text "STRONG"
+  const spWrapperRef = useRef<HTMLDivElement>(null)
+  const spSlot1Ref = useRef<HTMLDivElement>(null)
+  const spSlot2Ref = useRef<HTMLDivElement>(null)
+  const spText1Ref = useRef<HTMLDivElement>(null)
+  const spText2Ref = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     const section = sectionRef.current
@@ -51,15 +50,10 @@ export default function FitnessScaleY() {
 
     const MAX_SCALE = 10
 
-    // ---------- Helpers (không phụ thuộc breakpoint) ----------
-    // Đo chiều cao "thật" của node bất kể transform hiện tại
     const getBaseHeight = (node: HTMLElement) => {
-      // 1) clientHeight KHÔNG bị ảnh hưởng bởi transform → dùng trực tiếp
       const hClient = node.clientHeight
       if (hClient > 0) return hClient
 
-      // 2) Fallback: nếu vì lý do nào đó clientHeight = 0, lúc này getBoundingClientRect()
-      // mới bị ảnh hưởng bởi scale, nên cần chia scale
       const currentScale = Number(gsap.getProperty(node, 'scaleY')) || 1
       const rect = node.getBoundingClientRect()
       return (rect.height || 1) / currentScale
@@ -71,7 +65,6 @@ export default function FitnessScaleY() {
       return Math.min(vh / baseH, MAX_SCALE)
     }
 
-    // SVG box có tỉ lệ 16:4
     const getSvgBaseHeight = () => {
       const w =
         svgBoxEl.clientWidth || svgBoxEl.getBoundingClientRect().width || 1
@@ -94,7 +87,6 @@ export default function FitnessScaleY() {
     }
 
     const ctx = gsap.context(() => {
-      // ---------- Timeline luôn chạy (mobile + desktop) ----------
       gsap.set(el, {
         scaleY: 0.001,
         transformOrigin: 'top center',
@@ -126,7 +118,6 @@ export default function FitnessScaleY() {
         '<'
       )
 
-      // ---------- svgTL: chỉ tạo khi >= 768px ----------
       const mm = gsap.matchMedia()
 
       mm.add('(min-width: 768px)', () => {
@@ -187,7 +178,6 @@ export default function FitnessScaleY() {
         }
       })
 
-      // ---------- TODO: Scale SP (mobile < 768px) ----------
       mm.add('(max-width: 767.98px)', () => {
         const slot1 = spSlot1Ref.current
         const slot2 = spSlot2Ref.current
@@ -196,11 +186,9 @@ export default function FitnessScaleY() {
 
         if (!slot1 || !slot2 || !t1 || !t2) return
 
-        // đảm bảo origin đúng
         gsap.set([t1, t2], { transformOrigin: 'top center' })
 
         const fitOne = (slotEl: HTMLElement, textEl: HTMLElement) => {
-          // tạm set scaleY=1 để đo chính xác base height khi font clamp thay đổi
           gsap.set(textEl, { scaleY: 1 })
           const baseH = getBaseHeight(textEl)
           const targetH = slotEl.getBoundingClientRect().height || 1
@@ -213,32 +201,26 @@ export default function FitnessScaleY() {
           fitOne(slot2, t2)
         }
 
-        // lần đầu
         fitAll()
 
-        // Resize & orientation
         const onResize = () => fitAll()
         window.addEventListener('resize', onResize, { passive: true })
         window.addEventListener('orientationchange', onResize)
 
-        // Quan sát kích thước slot thay đổi (do browser UI, safe-area, v.v.)
         const ro1 = new ResizeObserver(() => fitOne(slot1, t1))
         const ro2 = new ResizeObserver(() => fitOne(slot2, t2))
         ro1.observe(slot1)
         ro2.observe(slot2)
 
-        // Cleanup khi rời mobile hoặc unmount
         return () => {
           window.removeEventListener('resize', onResize)
           window.removeEventListener('orientationchange', onResize)
           ro1.disconnect()
           ro2.disconnect()
-          // reset về 1 để không dính sang desktop
           gsap.set([t1, t2], { scaleY: 1 })
         }
       })
 
-      // Cleanup tổng cho matchMedia khi unmount
       return () => {
         mm.revert()
       }
@@ -271,7 +253,6 @@ export default function FitnessScaleY() {
           </div>
         </div>
 
-        {/* TODO: Scale SP */}
         <div ref={spWrapperRef} className="flex h-screen flex-col md:hidden">
           <div className="h-[70vh]">
             <div
@@ -325,7 +306,6 @@ export default function FitnessScaleY() {
           />
         </div>
 
-        {/* SVG wrap */}
         <div
           ref={svgWrapRef}
           className="flex h-full w-full items-center justify-center max-md:hidden"
