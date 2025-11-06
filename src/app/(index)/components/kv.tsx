@@ -70,12 +70,12 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
       const showGroup = (i: number) => {
         const g = groups[i]
         if (!g) return
-        gsap.set(g, { autoAlpha: 1 })
+        gsap.to(g, { autoAlpha: 1, duration: 0.2 })
       }
       const hideGroup = (i: number) => {
         const g = groups[i]
         if (!g) return
-        gsap.set(g, { autoAlpha: 0 })
+        gsap.to(g, { autoAlpha: 0, duration: 0.2 })
       }
       const showImageOnly = (i: number, opts?: gsap.TweenVars) => {
         const t = slides[i]?.img
@@ -108,12 +108,12 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
           {
             scaleY: fromScale,
             transformOrigin: origin,
-            stagger: { each: 0.1, from: staggerFrom },
+            stagger: { each: 0.05, from: staggerFrom },
           },
           {
             scaleY: toScale,
             transformOrigin: origin,
-            stagger: { each: 0.1, from: staggerFrom },
+            stagger: { each: 0.05, from: staggerFrom },
           },
           pos
         )
@@ -149,7 +149,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
       const OPEN_DUR = 1
       const CLOSE_DUR = 1
       const HOLD_BEFORE_CLOSE = 5
-      const IMAGE_FADE = 0.6
+      const IMAGE_FADE = 1.6
 
       let current = 0
       let phase: 'opening' | 'open' | 'closing' = 'opening' // controls clickability
@@ -166,7 +166,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
       slides.forEach((_, i) => {
         const btn = document.createElement('button')
         btn.className =
-          'group relative h-3 w-10 overflow-hidden rounded-full border border-white/50 aria-[current=true]:border-white focus:outline-none'
+          'group relative h-0.5 w-10 overflow-hidden rounded-full bg-white/40 '
         btn.setAttribute('type', 'button')
         btn.setAttribute('aria-label', `Go to slide ${i + 1}`)
 
@@ -247,8 +247,8 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
         phase = 'opening'
         gsap
           .timeline({ defaults: { ease: 'power3.inOut' } })
-          .to(halfTop, { top: 0, duration: OPEN_DUR }, 2)
-          .to(halfBottom, { bottom: 0, duration: OPEN_DUR }, 2)
+          .to(halfTop, { top: 0, duration: OPEN_DUR }, 4)
+          .to(halfBottom, { bottom: 0, duration: OPEN_DUR }, 4)
           .fromTo(
             video,
             {
@@ -259,19 +259,18 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
               clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
               duration: OPEN_DUR,
             },
-            2
+            4
           )
           .add(() => {
             phase = 'open'
             setPagerCurrent(i)
-            resetProgress() // reset tất cả trước khi chơi cái hiện tại
-            playProgress(i) // chạy progress cho slide đang mở
+            resetProgress()
+            playProgress(i)
             onComplete?.()
           })
       }
 
       const prepareImagesFor = (next: number, curr: number) => {
-        // ảnh của slide tiếp theo xuất hiện trước khi đóng half hiện tại
         showImageOnly(next, { duration: IMAGE_FADE })
         hideImageOnly(curr, { duration: IMAGE_FADE })
       }
@@ -285,7 +284,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
 
         gsap
           .timeline({ defaults: { ease: 'power3.inOut' } })
-          .add(() => prepareImagesFor(next, i), 0) // crossfade image ngay trước khi đóng
+          .add(() => prepareImagesFor(next, i), 0)
           .to(halfTop, { top: 'auto', duration: CLOSE_DUR }, 0)
           .to(halfBottom, { bottom: 'auto', duration: CLOSE_DUR }, 0)
           .to(
@@ -308,7 +307,6 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
       // ===== Navigation (autoplay + click) =====
       const openThenScheduleAutoClose = (i: number) => {
         openSlide(i, () => {
-          // autoplay: sau khi hold xong thì đóng và mở slide kế
           autoplayTween?.kill()
           autoplayTween = gsap.to(
             {},
@@ -355,8 +353,16 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
           { scale: 0, duration: 2, ease: 'power3.out' },
           '<'
         )
+        .from(
+          pagerRef.current,
+          {
+            autoAlpha: 0,
+            duration: 2,
+            ease: 'power3.out',
+          },
+          '<'
+        )
         .add(() => {
-          // bắt đầu từ slide 0
           current = 0
           openThenScheduleAutoClose(current)
         }, '>-0.001')
@@ -397,7 +403,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
       {/* Background thumb */}
       <div
         ref={thumbRef}
-        className="absolute inset-0 flex items-center justify-center bg-[url(/assets/images/kv.jpg)] bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 flex items-center justify-center"
       />
 
       {/* images (one per slide) */}
@@ -424,7 +430,10 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
       </div>
 
       {/* videos (one per slide) */}
-      <div ref={video01Ref} className="absolute inset-0 z-10">
+      <div
+        ref={video01Ref}
+        className="absolute inset-0 z-10 [clip-path:polygon(0_50%,_100%_50%,_100%_50%,_0_50%)]"
+      >
         <video
           className="h-full w-full object-cover"
           autoPlay
@@ -453,7 +462,10 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
         </div>
       </div>
 
-      <div ref={video02Ref} className="absolute inset-0 z-10">
+      <div
+        ref={video02Ref}
+        className="absolute inset-0 z-10 [clip-path:polygon(0_50%,_100%_50%,_100%_50%,_0_50%)]"
+      >
         <video
           className="h-full w-full object-cover"
           autoPlay
@@ -482,7 +494,10 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
         </div>
       </div>
 
-      <div ref={video03Ref} className="absolute inset-0 z-10">
+      <div
+        ref={video03Ref}
+        className="absolute inset-0 z-10 [clip-path:polygon(0_50%,_100%_50%,_100%_50%,_0_50%)]"
+      >
         <video
           className="h-full w-full object-cover"
           autoPlay
@@ -525,7 +540,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
         {/* block 01 */}
         <div ref={block01Ref} className="flex items-center justify-center">
           <div
-            data-infinite-scroll="2:60s"
+            data-infinite-scroll="2:90s"
             className="js-split-half-top absolute flex w-max [clip-path:polygon(0_0,_100%_0,_100%_50%,_0_50%)]"
           >
             <div className="flex shrink-0 items-center">
@@ -560,7 +575,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
           </div>
 
           <div
-            data-infinite-scroll="2:60s"
+            data-infinite-scroll="2:90s"
             className="js-split-half-bottom absolute flex w-max [clip-path:polygon(0_50%,_100%_50%,_100%_100%,_0_100%)]"
           >
             <div className="flex shrink-0 items-center">
@@ -598,7 +613,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
         {/* block 02 */}
         <div ref={block02Ref} className="flex items-center justify-center">
           <div
-            data-infinite-scroll="2:60s"
+            data-infinite-scroll="2:90s"
             className="js-split-half-top absolute flex w-max [clip-path:polygon(0_0,_100%_0,_100%_50%,_0_50%)]"
           >
             <div className="flex shrink-0 items-center">
@@ -610,20 +625,20 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
                   <div className="flex items-center bg-[#b76eff] px-[max(21px,21px+100vw*.03)]">
                     <div className="js-split-block relative text-[clamp(80px,36.725px+100vw*.1725,300px)] leading-none font-bold whitespace-nowrap">
                       <span className="split-text-top inline-block">
-                        PHIVE PORTO
+                        PHIVE LISBON
                       </span>
                       <span className="split-text-bottom absolute inset-0 inline-block">
-                        PHIVE PORTO
+                        PHIVE LISBON
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center bg-[#b76eff] px-[max(21px,21px+100vw*.03)]">
                     <div className="js-split-block relative text-[clamp(80px,36.725px+100vw*.1725,300px)] leading-none font-bold whitespace-nowrap">
                       <span className="split-text-top inline-block">
-                        PHIVE PORTO
+                        PHIVE LISBON
                       </span>
                       <span className="split-text-bottom absolute inset-0 inline-block">
-                        PHIVE PORTO
+                        PHIVE LISBON
                       </span>
                     </div>
                   </div>
@@ -633,7 +648,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
           </div>
 
           <div
-            data-infinite-scroll="2:60s"
+            data-infinite-scroll="2:90s"
             className="js-split-half-bottom absolute flex w-max [clip-path:polygon(0_50%,_100%_50%,_100%_100%,_0_100%)]"
           >
             <div className="flex shrink-0 items-center">
@@ -645,20 +660,20 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
                   <div className="flex items-center bg-[#b76eff] px-[max(21px,21px+100vw*.03)]">
                     <div className="js-split-block relative text-[clamp(80px,36.725px+100vw*.1725,300px)] leading-none font-bold whitespace-nowrap">
                       <span className="split-text-top inline-block">
-                        PHIVE PORTO
+                        PHIVE LISBON
                       </span>
                       <span className="split-text-bottom absolute inset-0 inline-block">
-                        PHIVE PORTO
+                        PHIVE LISBON
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center bg-[#b76eff] px-[max(21px,21px+100vw*.03)]">
                     <div className="js-split-block relative text-[clamp(80px,36.725px+100vw*.1725,300px)] leading-none font-bold whitespace-nowrap">
                       <span className="split-text-top inline-block">
-                        PHIVE PORTO
+                        PHIVE LISBON
                       </span>
                       <span className="split-text-bottom absolute inset-0 inline-block">
-                        PHIVE PORTO
+                        PHIVE LISBON
                       </span>
                     </div>
                   </div>
@@ -671,7 +686,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
         {/* block 03 */}
         <div ref={block03Ref} className="flex items-center justify-center">
           <div
-            data-infinite-scroll="2:60s"
+            data-infinite-scroll="2:90s"
             className="js-split-half-top absolute flex w-max [clip-path:polygon(0_0,_100%_0,_100%_50%,_0_50%)]"
           >
             <div className="flex shrink-0 items-center">
@@ -683,20 +698,20 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
                   <div className="flex items-center bg-[#f7bbce] px-[max(21px,21px+100vw*.03)]">
                     <div className="js-split-block relative text-[clamp(80px,36.725px+100vw*.1725,300px)] leading-none font-bold whitespace-nowrap">
                       <span className="split-text-top inline-block">
-                        PHIVE PORTO
+                        TRAIN EVERY DAY
                       </span>
                       <span className="split-text-bottom absolute inset-0 inline-block">
-                        PHIVE PORTO
+                        TRAIN EVERY DAY
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center bg-[#f7bbce] px-[max(21px,21px+100vw*.03)]">
                     <div className="js-split-block relative text-[clamp(80px,36.725px+100vw*.1725,300px)] leading-none font-bold whitespace-nowrap">
                       <span className="split-text-top inline-block">
-                        PHIVE PORTO
+                        TRAIN EVERY DAY
                       </span>
                       <span className="split-text-bottom absolute inset-0 inline-block">
-                        PHIVE PORTO
+                        TRAIN EVERY DAY
                       </span>
                     </div>
                   </div>
@@ -706,7 +721,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
           </div>
 
           <div
-            data-infinite-scroll="2:60s"
+            data-infinite-scroll="2:90s"
             className="js-split-half-bottom absolute flex w-max [clip-path:polygon(0_50%,_100%_50%,_100%_100%,_0_100%)]"
           >
             <div className="flex shrink-0 items-center">
@@ -718,20 +733,20 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
                   <div className="flex items-center bg-[#f7bbce] px-[max(21px,21px+100vw*.03)]">
                     <div className="js-split-block relative text-[clamp(80px,36.725px+100vw*.1725,300px)] leading-none font-bold whitespace-nowrap">
                       <span className="split-text-top inline-block">
-                        PHIVE PORTO
+                        TRAIN EVERY DAY
                       </span>
                       <span className="split-text-bottom absolute inset-0 inline-block">
-                        PHIVE PORTO
+                        TRAIN EVERY DAY
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center bg-[#f7bbce] px-[max(21px,21px+100vw*.03)]">
                     <div className="js-split-block relative text-[clamp(80px,36.725px+100vw*.1725,300px)] leading-none font-bold whitespace-nowrap">
                       <span className="split-text-top inline-block">
-                        PHIVE PORTO
+                        TRAIN EVERY DAY
                       </span>
                       <span className="split-text-bottom absolute inset-0 inline-block">
-                        PHIVE PORTO
+                        TRAIN EVERY DAY
                       </span>
                     </div>
                   </div>
@@ -743,11 +758,8 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
       </div>
 
       {/* Pagination (progress) */}
-      <div className="pointer-events-auto absolute bottom-6 z-[60] flex w-full items-center justify-center">
-        <div
-          ref={pagerRef}
-          className="flex items-center gap-3 rounded-full bg-black/30 px-3 py-2 backdrop-blur"
-        />
+      <div className="pointer-events-auto absolute bottom-[20vh] z-[40] flex w-full items-center justify-center">
+        <div ref={pagerRef} className="flex items-center gap-3 rounded-full" />
       </div>
     </section>
   )
