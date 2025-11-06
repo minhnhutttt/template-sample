@@ -12,6 +12,17 @@
 }
 
 @layer components {
+  .runner:hover .runner-img {
+    animation: run 0.7s steps(6) infinite;
+  }
+  @keyframes run {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: -436px 0;
+    }
+  }
 }
 
 @layer utilities {

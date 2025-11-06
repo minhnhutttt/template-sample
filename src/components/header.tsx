@@ -48,22 +48,12 @@ const Header = () => {
             >
               <li>
                 <Link href="/" className="block py-5" onClick={close}>
-                  home
+                  Home
                 </Link>
               </li>
               <li>
-                <Link href="/sample" className="block py-5" onClick={close}>
-                  about
-                </Link>
-              </li>
-              <li>
-                <Link href="/" className="block py-5" onClick={close}>
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link href="/444" className="block py-5" onClick={close}>
-                  contact
+                <Link href="/clubs" className="block py-5" onClick={close}>
+                  Clubs
                 </Link>
               </li>
             </ul>
