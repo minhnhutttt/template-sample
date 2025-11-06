@@ -5,6 +5,7 @@ import SplitText from 'gsap/SplitText'
 import { useLayoutEffect, useRef } from 'react'
 
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import { useSlideTheme } from '@/providers/slide-theme'
 
 gsap.registerPlugin(SplitText)
 
@@ -14,6 +15,7 @@ type SplitOptions = {
 
 const Kv = ({ options }: { options?: SplitOptions }) => {
   useInfiniteScroll()
+  const { setActiveSlide } = useSlideTheme()
 
   const scope = useRef<HTMLDivElement | null>(null)
   const container = useRef<HTMLDivElement | null>(null)
@@ -68,6 +70,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
       const groups = slides.map((s) => [s.video, s.img, s.block])
 
       const showGroup = (i: number) => {
+        setActiveSlide(i)
         const g = groups[i]
         if (!g) return
         gsap.to(g, { autoAlpha: 1, duration: 0.2 })
@@ -383,7 +386,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
   return (
     <section
       ref={scope}
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden"
+      className="relative flex h-[calc(100vh-64px)] flex-col items-center justify-center overflow-hidden md:min-h-screen"
     >
       {/* Opening overlay */}
       <div
@@ -758,7 +761,7 @@ const Kv = ({ options }: { options?: SplitOptions }) => {
       </div>
 
       {/* Pagination (progress) */}
-      <div className="pointer-events-auto absolute bottom-[20vh] z-[40] flex w-full items-center justify-center">
+      <div className="pointer-events-auto absolute bottom-[20vh] z-[50] flex w-full items-center justify-center">
         <div ref={pagerRef} className="flex items-center gap-3 rounded-full" />
       </div>
     </section>

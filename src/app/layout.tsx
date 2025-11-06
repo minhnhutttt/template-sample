@@ -12,6 +12,7 @@ import {
   TWITTER,
 } from '@/config/constants'
 import './globals.scss'
+import { SlideThemeProvider } from '@/providers/slide-theme'
 
 const roboto = Roboto({
   weight: ['400', '700'],
@@ -49,9 +50,11 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
       <body
         className={`bg-stone-900 ${roboto.className} ${creepster.variable}`}
       >
-        <Header />
-        {children}
-        <Footer />
+        <SlideThemeProvider>
+          <Header />
+          {children}
+          <Footer />
+        </SlideThemeProvider>
       </body>
     </html>
   )
