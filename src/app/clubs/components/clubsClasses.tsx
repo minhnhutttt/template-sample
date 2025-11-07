@@ -4,8 +4,53 @@ import ScrollTrigger from 'gsap/ScrollTrigger'
 import SplitText from 'gsap/SplitText'
 import { useLayoutEffect, useRef } from 'react'
 
+import DraggableSlider from '@/components/DraggableSlider'
+
 gsap.registerPlugin(ScrollTrigger, SplitText)
 const ClubsClasses = () => {
+  const slides = [
+    {
+      image: '/assets/images/1.jpg',
+      title: 'BOOTCAMP',
+    },
+    {
+      image: '/assets/images/2.jpg',
+      title: 'BOOTCAMP',
+    },
+    {
+      image: '/assets/images/3.jpg',
+      title: 'BOOTCAMP',
+    },
+    {
+      image: '/assets/images/4.jpg',
+      title: 'BOOTCAMP',
+    },
+    {
+      image: '/assets/images/5.jpg',
+      title: 'BOOTCAMP',
+    },
+    {
+      image: '/assets/images/6.jpg',
+      title: 'BOOTCAMP',
+    },
+    {
+      image: '/assets/images/7.jpg',
+      title: 'BOOTCAMP',
+    },
+    {
+      image: '/assets/images/8.jpg',
+      title: 'BOOTCAMP',
+    },
+    {
+      image: '/assets/images/9.jpg',
+      title: 'BOOTCAMP',
+    },
+    {
+      image: '/assets/images/10.jpg',
+      title: 'BOOTCAMP',
+    },
+  ]
+
   const wrapperRef = useRef<HTMLDivElement>(null)
   const textMiddleRef = useRef<HTMLSpanElement>(null)
   const textBottomRef = useRef<HTMLSpanElement>(null)
@@ -70,7 +115,7 @@ const ClubsClasses = () => {
           </p>
         </div>
       </div>
-      <div className="relative z-10 text-center text-[clamp(80px,calc(50px+17.25vw),300px)] leading-none font-bold tracking-tight whitespace-nowrap text-[#ffe000] will-change-transform">
+      <div className="relative z-10 text-center text-[clamp(80px,calc(30px+15.25vw),300px)] leading-none font-bold tracking-tight whitespace-nowrap text-[#ffe000] will-change-transform">
         <span ref={textMiddleRef} className="inline-block">
           CLASSES
         </span>
@@ -78,6 +123,35 @@ const ClubsClasses = () => {
           CLASSES
         </span>
       </div>
+      <div className="flex items-center justify-center gap-1.5 text-[#ffe000]">
+        <p className="relative block rounded-[max(21.8px,21.8px+100vw*.0095)] px-[max(20.4px,20.4px+100vw*.0021)] py-[min(12px,12px+100vw*0)] text-[#fff4a6] opacity-[.4]">
+          FILTER
+        </p>
+        <ul className="flex flex-wrap gap-1.5 max-md:flex-1">
+          <li className="relative block rounded-[max(21.8px,21.8px+100vw*.0095)] bg-[#ffe000] px-[max(20.4px,20.4px+100vw*.0021)] py-[min(12px,12px+100vw*0)] text-[clamp(10px,9.415px+100vw*.0015,12px)] font-bold text-black">
+            ALL
+          </li>
+          <li className="relative block rounded-[max(21.8px,21.8px+100vw*.0095)] px-[max(20.4px,20.4px+100vw*.0021)] py-[min(12px,12px+100vw*0)] text-[clamp(10px,9.415px+100vw*.0015,12px)] font-bold">
+            FLOW
+          </li>
+          <li className="relative block rounded-[max(21.8px,21.8px+100vw*.0095)] px-[max(20.4px,20.4px+100vw*.0021)] py-[min(12px,12px+100vw*0)] text-[clamp(10px,9.415px+100vw*.0015,12px)] font-bold">
+            RIDE
+          </li>
+          <li className="relative block rounded-[max(21.8px,21.8px+100vw*.0095)] px-[max(20.4px,20.4px+100vw*.0021)] py-[min(12px,12px+100vw*0)] text-[clamp(10px,9.415px+100vw*.0015,12px)] font-bold">
+            POWER
+          </li>
+          <li className="relative block rounded-[max(21.8px,21.8px+100vw*.0095)] px-[max(20.4px,20.4px+100vw*.0021)] py-[min(12px,12px+100vw*0)] text-[clamp(10px,9.415px+100vw*.0015,12px)] font-bold">
+            MOVES
+          </li>
+          <li className="relative block rounded-[max(21.8px,21.8px+100vw*.0095)] px-[max(20.4px,20.4px+100vw*.0021)] py-[min(12px,12px+100vw*0)] text-[clamp(10px,9.415px+100vw*.0015,12px)] font-bold">
+            KID
+          </li>
+          <li className="relative block rounded-[max(21.8px,21.8px+100vw*.0095)] px-[max(20.4px,20.4px+100vw*.0021)] py-[min(12px,12px+100vw*0)] text-[clamp(10px,9.415px+100vw*.0015,12px)] font-bold">
+            AQUA
+          </li>
+        </ul>
+      </div>
+      <DraggableSlider slides={slides} />
     </div>
   )
 }
