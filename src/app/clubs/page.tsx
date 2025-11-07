@@ -6,7 +6,9 @@ import ClubsBoavista from './components/clubsBoavista'
 import ClubsClasses from './components/clubsClasses'
 import ClubsInnovation from './components/clubsInnovation'
 import ClubsKV from './components/clubsKv'
+import ClubsPorto from './components/clubsPorto'
 import ClubsStatistics from './components/clubsStatistics'
+import ClubsTimetable from './components/clubsTimetable'
 
 export const metadata: Metadata = {
   openGraph: {
@@ -26,6 +28,8 @@ const ClubsPage = () => {
       <ClubsBoavista />
       <ClubsStatistics />
       <ClubsClasses />
+      <ClubsTimetable />
+      <ClubsPorto />
     </>
   )
 }

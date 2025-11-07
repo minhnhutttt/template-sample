@@ -75,6 +75,23 @@
       transform: rotate(360deg);
     }
   }
+
+  .cards {
+    --n: 8;
+    --r: 20vw;
+  }
+  @media screen and (max-width: 768px) {
+    .cards {
+      --n: 8;
+      --r: 200px;
+    }
+  }
+
+  .cards li {
+    transform: translate(-50%, -50%) rotate(calc(var(--i) * 1turn / var(--n)))
+      translateY(calc(-1 * var(--r)));
+    transform-origin: center center;
+  }
 }
 
 @layer utilities {
