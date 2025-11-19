@@ -1,4 +1,4 @@
-@use "tailwindcss";
+@use 'tailwindcss';
 @source "./src/**/*.{js,ts,jsx,tsx,mdx}";
 
 @layer base {
@@ -8,6 +8,15 @@
 }
 
 @layer components {
+  .marker {
+    display: inline;
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: bottom left;
+    transition: all 0.5s;
+    background-size: 100% 100%;
+    transition-delay: 0.5s;
+  }
 }
 
 @layer utilities {
