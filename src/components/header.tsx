@@ -19,7 +19,7 @@ const Header = () => {
             >
               <span>
                 <img
-                  className="max-md:w-8"
+                  className="max-md:w-8 md:w-[72px]"
                   src="/assets/images/ic-robot.png"
                   alt=""
                 />

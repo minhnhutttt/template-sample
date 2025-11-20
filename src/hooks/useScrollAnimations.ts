@@ -30,7 +30,7 @@ const useScrollAnimations = () => {
       },
       marker: (el: HTMLElement) => {
         void gsap.from(el, {
-          backgroundSize: '0% 0%',
+          backgroundSize: '0% 100%',
           duration: 0.5,
           ease: 'power2.inOut',
           scrollTrigger: { trigger: el },

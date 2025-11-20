@@ -127,30 +127,41 @@ export default function Customers() {
       <p className="fade-up mt-15 mb-4 text-center text-[24px] font-semibold md:mt-28 md:mb-5 md:text-[48px]">
         それが広告運用の常識でした
       </p>
-      <div className="bg-[url(/assets/images/bg.png)] bg-size-[100%_auto] bg-top md:pt-60">
-        <p className="text-center text-[40px] font-bold md:text-[50px] lg:text-[80px]">
+      <div className="bg-[url(/assets/images/bg.png)] bg-size-[100%_auto] bg-top bg-no-repeat pt-32 pb-14 md:pt-60 md:pb-[85px]">
+        <p className="fade-up text-center text-[40px] font-bold md:text-[50px] lg:text-[80px]">
           ですがもう諦める <br />
           必要はありません!
         </p>
-        <div className="flex">
-          <p className="text-[32px] font-semibold md:text-[60px]">
-            <span className="text-[22px] md:text-[42px]">
-              専用
-              <span className="text-[32px] text-[#FF1744] md:text-[75px]">
-                AI
+        <div className="fade-up mt-3 px-5">
+          <div className="mx-auto flex w-full max-w-[1250px] items-center justify-between max-xl:flex-col-reverse">
+            <p className="text-[32px] font-semibold max-md:text-center md:text-[60px]">
+              <span className="block text-center">
+                <span className="text-[22px] md:text-[42px]">
+                  専用
+                  <span className="text-[32px] text-[#FF1744] md:text-[75px]">
+                    AI
+                  </span>
+                  が{' '}
+                </span>
               </span>
-              が <br />
-              その
-            </span>
-            <span className="text-[36px] md:text-[54px]">常識を壊します。</span>
-            <br />
-            低予算<span className="text-[22px] md:text-[42px]">でも、</span>
-            全自動<span className="text-[22px] md:text-[42px]">で</span>
-            <br />
-            代理店以上の成果を。
-          </p>
-          <div className="">
-            <img src="/assets/images/robot.png" alt="" />
+              <span className="text-[22px] md:text-[42px]">その</span>
+              <span className="text-[36px] md:text-[54px]">
+                常識を壊します。
+              </span>
+              <br />
+              低予算<span className="text-[22px] md:text-[42px]">でも、</span>
+              全自動<span className="text-[22px] md:text-[42px]">で</span>
+              <br />
+              代理店以上
+              <span className="text-[22px] md:text-[42px]">の成果を。</span>
+            </p>
+            <div className="">
+              <img
+                className="max-md:w-[350px]"
+                src="/assets/images/robot.png"
+                alt=""
+              />
+            </div>
           </div>
         </div>
       </div>
