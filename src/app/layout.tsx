@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Noto_Sans_JP } from 'next/font/google'
+import { Zen_Kaku_Gothic_New, Roboto } from 'next/font/google'
 import { ReactNode } from 'react'
 
 import Footer from '@/components/footer'
@@ -13,9 +13,15 @@ import {
 } from '@/config/constants'
 import './globals.scss'
 
-const noto = Noto_Sans_JP({
+const zen = Zen_Kaku_Gothic_New({
   weight: ['300', '400', '500', '700', '900'],
   subsets: ['latin'],
+})
+
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700', '900'],
+  subsets: ['latin'],
+  variable: '--font-roboto',
 })
 
 export const metadata: Metadata = {
@@ -40,7 +46,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="ja">
-      <body className={noto.className}>
+      <body className={`${zen.className} ${roboto.variable}`}>
         <Header />
         {children}
         <Footer />

@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 
 import { SITE_URL, OG } from '@/config/constants'
 
-// remove
-import Sample from './components/sample'
+import Fv from './components/fv'
+import Introduction from './components/introduction'
 
 export const metadata: Metadata = {
   openGraph: {
@@ -18,7 +18,8 @@ export const metadata: Metadata = {
 const IndexPage = () => {
   return (
     <>
-      <Sample />
+      <Fv />
+      <Introduction />
     </>
   )
 }

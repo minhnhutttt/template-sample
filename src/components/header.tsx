@@ -1,72 +1,35 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect, useCallback } from 'react'
 
 const Header = () => {
-  const [NavOpen, setNavOpen] = useState(false)
-
-  const close = useCallback(() => {
-    setNavOpen(false)
-  }, [])
-
-  useEffect(() => {
-    const body = document.body
-
-    if (NavOpen) {
-      body.classList.add('overflow-hidden')
-    } else {
-      body.classList.remove('overflow-hidden')
-    }
-  }, [NavOpen])
-
   return (
-    <header className="relative bg-gray-100">
-      <div className="container">
-        <div className="flex h-24 items-center justify-between">
-          <div className="max-w-[160px]">
+    <header className="absolute inset-x-0 top-0">
+      <div className="mx-auto px-5 md:px-[40px]">
+        <div className="flex h-20 items-center justify-between md:h-25">
+          <div className="max-md:max-w-[100px]">
             <Link href="/">
               <img src="/assets/images/logo.png" alt="" />
             </Link>
           </div>
-          <div
-            className={`max-lg:absolute max-lg:left-0 max-lg:top-0 max-lg:h-screen max-lg:w-full max-lg:overflow-y-scroll max-lg:bg-white max-lg:px-4 max-lg:pb-12 max-lg:pt-20 ${
-              NavOpen ? '' : 'max-lg:invisible max-lg:opacity-0'
-            }`}
+          <Link
+            href="#"
+            className="flex h-[50px] w-[200px] items-center justify-center rounded-full bg-[linear-gradient(90deg,_#00DBDE_0%,_#FD3EFF_100%)] p-[3px] text-[13px] font-medium md:h-[70px] md:w-[246px] md:text-[16px]"
           >
-            <ul className="lg:flex lg:gap-6">
-              <li>
-                <Link href="/" className="inline-block py-3" onClick={close}>
-                  home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/sample"
-                  className="inline-block py-3"
-                  onClick={close}
-                >
-                  about
-                </Link>
-              </li>
-              <li>
-                <Link href="/" className="inline-block py-3" onClick={close}>
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link href="/444" className="inline-block py-3" onClick={close}>
-                  contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <button
-            className="relative z-30 h-10 w-10 bg-black text-white lg:hidden"
-            onClick={() => setNavOpen((prev) => !prev)}
-          >
-            {NavOpen ? <div>閉</div> : <div>開</div>}
-          </button>
+            <span className="flex h-full w-full items-center justify-center gap-2 rounded-full bg-white leading-[1.2]">
+              <span>
+                <img
+                  className="max-md:w-7"
+                  src="/assets/images/ic-wallet.png"
+                  alt=""
+                />
+              </span>
+              <span>
+                ウォレットに接続して <br />
+                購入履歴を見る
+              </span>
+            </span>
+          </Link>
         </div>
       </div>
     </header>
