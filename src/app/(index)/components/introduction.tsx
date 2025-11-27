@@ -29,8 +29,6 @@ const Introduction = () => {
               trigger: sectionRef.current,
               start: 'top top',
               end: '+=100%',
-              scrub: 1,
-              pin: true,
               invalidateOnRefresh: true,
             },
           })
@@ -38,7 +36,7 @@ const Introduction = () => {
             item01.current,
             {
               left: '25%',
-              duration: 1.6,
+              duration: 0.6,
               ease: 'power1.in',
             },
             0
@@ -47,7 +45,7 @@ const Introduction = () => {
             item02.current,
             {
               right: '25%',
-              duration: 1.6,
+              duration: 0.6,
               ease: 'power1.in',
             },
             0
@@ -61,7 +59,11 @@ const Introduction = () => {
   }, [])
 
   return (
-    <section ref={ref} id="introduction" className="pt-14 md:pt-20">
+    <section
+      ref={ref}
+      id="introduction"
+      className="bg-[#FDF4FF] pt-14 md:pt-20"
+    >
       <div ref={sectionRef} className="bg-[#FDF4FF] px-5 pt-10 pb-7 md:pt-18">
         <div className="relative z-10 text-center">
           <h2 className="text-[32px] font-bold md:text-[45px] lg:text-[64px]">

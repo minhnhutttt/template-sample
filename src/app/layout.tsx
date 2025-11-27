@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Zen_Kaku_Gothic_New, Roboto } from 'next/font/google'
+import { Zen_Kaku_Gothic_New, Roboto, Inter } from 'next/font/google'
 import { ReactNode } from 'react'
 
 import Footer from '@/components/footer'
@@ -24,6 +24,12 @@ const roboto = Roboto({
   variable: '--font-roboto',
 })
 
+const inter = Inter({
+  weight: ['300', '400', '500', '700', '900'],
+  subsets: ['latin'],
+  variable: '--font-inter',
+})
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL ?? 'http://localhost:3000'),
   icons: [
@@ -46,7 +52,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="ja">
-      <body className={`${zen.className} ${roboto.variable}`}>
+      <body className={`${zen.className} ${roboto.variable} ${inter.variable}`}>
         <Header />
         {children}
         <Footer />
