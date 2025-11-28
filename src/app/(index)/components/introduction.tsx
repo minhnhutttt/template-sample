@@ -85,12 +85,6 @@ const Introduction = () => {
             duration: 0.6,
             ease: 'power2.out',
           })
-          .from([item01Person.current, item02Person.current], {
-            opacity: 0,
-            scale: 0.8,
-            duration: 0.6,
-            ease: 'power1.out',
-          })
       })
 
       return () => mm.revert()
