@@ -12,7 +12,7 @@ export default function Accordion({
   const [isOpen, setIsOpen] = useState(defaultOpen)
 
   return (
-    <div className="mx-auto w-full max-w-[1180px] bg-white transition-all duration-200 hover:shadow-lg">
+    <div className="mx-auto w-full max-w-[1180px] transition-all duration-200 hover:shadow-lg">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative flex w-full items-center justify-center border-b border-black px-6 py-4 text-left transition-colors hover:bg-gray-50"

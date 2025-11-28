@@ -16,7 +16,9 @@ const Introduction = () => {
 
   const sectionRef = useRef<HTMLDivElement>(null)
   const item01 = useRef<HTMLDivElement>(null)
+  const item01Person = useRef<HTMLImageElement>(null)
   const item02 = useRef<HTMLDivElement>(null)
+  const item02Person = useRef<HTMLImageElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -27,7 +29,7 @@ const Introduction = () => {
           .timeline({
             scrollTrigger: {
               trigger: sectionRef.current,
-              start: 'top top',
+              start: 'top center',
               end: '+=100%',
               invalidateOnRefresh: true,
             },
@@ -37,7 +39,7 @@ const Introduction = () => {
             {
               left: '25%',
               duration: 0.6,
-              ease: 'power1.in',
+              ease: 'power1.out',
             },
             0
           )
@@ -46,10 +48,49 @@ const Introduction = () => {
             {
               right: '25%',
               duration: 0.6,
-              ease: 'power1.in',
+              ease: 'power1.out',
             },
             0
           )
+          .from(
+            [item01Person.current, item02Person.current],
+            {
+              scaleY: 0,
+              duration: 0.6,
+              transformOrigin: 'bottom',
+              ease: 'power1.inOut',
+            },
+            '-=0.2'
+          )
+      })
+
+      mm.add('(max-width: 767px)', () => {
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 80%',
+              invalidateOnRefresh: true,
+            },
+          })
+          .from(item01.current, {
+            opacity: 0,
+            y: 40,
+            duration: 0.6,
+            ease: 'power2.out',
+          })
+          .from(item02.current, {
+            opacity: 0,
+            y: 40,
+            duration: 0.6,
+            ease: 'power2.out',
+          })
+          .from([item01Person.current, item02Person.current], {
+            opacity: 0,
+            scale: 0.8,
+            duration: 0.6,
+            ease: 'power1.out',
+          })
       })
 
       return () => mm.revert()
@@ -84,6 +125,7 @@ const Introduction = () => {
             >
               <figure className="absolute bottom-full left-0">
                 <img
+                  ref={item01Person}
                   className="max-md:w-30"
                   src="/assets/images/img-boy.png"
                   alt=""
@@ -121,6 +163,7 @@ const Introduction = () => {
             >
               <figure className="absolute right-0 bottom-full">
                 <img
+                  ref={item02Person}
                   className="max-md:w-27"
                   src="/assets/images/img-girl.png"
                   alt=""

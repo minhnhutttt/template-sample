@@ -8,6 +8,7 @@ export type FaqItemPropsType = {
   question: ReactNode
   answer: ReactNode
   color?: string
+  isGradient?: boolean
 }
 
 const FaqItem = ({
@@ -15,6 +16,7 @@ const FaqItem = ({
   question,
   answer,
   color = '#000000',
+  isGradient = false,
 }: FaqItemPropsType) => {
   const contentRef = useRef<HTMLDivElement>(null)
   const arrowRef = useRef<HTMLDivElement>(null)
@@ -45,8 +47,8 @@ const FaqItem = ({
   return (
     <div
       ref={containerRef}
-      className="group border-b bg-white duration-300 [&.is-open]:bg-[#F5F6F7]"
-      style={{ borderColor: color }}
+      data-gradient={isGradient}
+      className="group border-b border-black bg-white duration-300 data-[gradient=true]:border-[#609FEB] [&.is-open]:bg-[#F5F6F7] data-[gradient=true]:[&.is-open]:bg-[linear-gradient(90deg,rgba(0,219,222,0.20)_0%,rgba(253,62,255,0.20)_100%)]"
     >
       <button
         type="button"
@@ -66,7 +68,7 @@ const FaqItem = ({
         </div>
         <div
           ref={arrowRef}
-          className="relative ml-3 flex size-8 items-center justify-center rounded-full duration-150 md:size-12"
+          className="relative ml-3 flex size-8 items-center justify-center rounded-full bg-black duration-150 group-data-[gradient=true]:bg-[linear-gradient(90deg,#00DBDE_0%,#FD3EFF_100%)] group-[.is-open]:bg-white group-[.is-open]:group-data-[gradient=true]:bg-[linear-gradient(90deg,#FFF_0%,#FFF_100%)] md:size-12"
         >
           <svg
             width="48"
@@ -75,12 +77,6 @@ const FaqItem = ({
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <rect
-              width="48"
-              height="48"
-              rx="24"
-              className="fill-black group-[.is-open]:fill-white"
-            />
             <path
               fillRule="evenodd"
               clipRule="evenodd"

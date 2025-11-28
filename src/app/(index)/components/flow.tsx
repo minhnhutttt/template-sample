@@ -65,7 +65,7 @@ const Flow = () => {
   }, [])
   return (
     <section ref={ref} id="flow" className="relative overflow-clip">
-      <div className="fade-up relative mx-auto -mt-12 flex h-25 w-[300px] items-center justify-center gap-3 rounded-3xl border-4 border-black bg-white px-5 before:absolute before:-bottom-[36px] before:h-[36px] before:w-[40px] before:bg-black before:[clip-path:polygon(0_0,100%_0,50%_100%)] after:absolute after:bottom-[-28px] after:h-[36px] after:w-[40px] after:bg-white after:[clip-path:polygon(0_0,100%_0,50%_100%)] md:-mt-23 md:h-[155px] md:w-[404px] md:px-7.5">
+      <div className="fade-up relative mx-auto -mt-12 flex h-25 w-[300px] items-center justify-center gap-3 rounded-3xl border-4 border-black bg-white px-5 before:absolute before:-bottom-[26px] before:h-[26px] before:w-[30px] before:bg-black before:[clip-path:polygon(0_0,100%_0,50%_100%)] after:absolute after:bottom-[-20px] after:h-[26px] after:w-[30px] after:bg-white after:[clip-path:polygon(0_0,100%_0,50%_100%)] md:-mt-23 md:h-[155px] md:w-[404px] md:px-7.5 md:before:-bottom-[36px] md:before:h-[36px] md:before:w-[40px] md:after:bottom-[-28px] md:after:h-[36px] md:after:w-[40px]">
         <figure>
           <img
             className="max-md:w-14"
